@@ -1,0 +1,630 @@
+<title>Bader Villa B2660</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --paper: #e7ebee;
+    --surface: #f7f9fa;
+    --stage: #ced6db;
+    --ink: #101a20;
+    --ink-2: #47585f;
+    --ink-3: #7c8c93;
+    --rule: #c3ced4;
+    --rule-soft: #dae1e5;
+    --accent: #0071c1;
+    --accent-soft: rgba(0, 113, 193, 0.12);
+    --warm: #9f885b;
+    --warm-soft: rgba(159, 136, 91, 0.16);
+    --shadow: 0 1px 2px rgba(16, 26, 32, .07);
+    --display: "Jost", "Century Gothic", "Futura", sans-serif;
+    --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0c1317;
+      --surface: #141e23;
+      --stage: #1b262c;
+      --ink: #e3eaee;
+      --ink-2: #a0b1b9;
+      --ink-3: #6d7f88;
+      --rule: #2a3940;
+      --rule-soft: #1e2c32;
+      --accent: #55a8e6;
+      --accent-soft: rgba(85, 168, 230, 0.16);
+      --warm: #c9ac78;
+      --warm-soft: rgba(201, 172, 120, 0.18);
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #0c1317;
+    --surface: #141e23;
+    --stage: #1b262c;
+    --ink: #e3eaee;
+    --ink-2: #a0b1b9;
+    --ink-3: #6d7f88;
+    --rule: #2a3940;
+    --rule-soft: #1e2c32;
+    --accent: #55a8e6;
+    --accent-soft: rgba(85, 168, 230, 0.16);
+    --warm: #c9ac78;
+    --warm-soft: rgba(201, 172, 120, 0.18);
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .app {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  /* ---- masthead ---------------------------------------------------- */
+  .bar {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 20px;
+    padding: 14px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar h1 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 19px;
+    letter-spacing: .012em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .bar .code {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 2px;
+    padding: 1px 6px;
+  }
+  .bar .meta {
+    margin-left: auto;
+    color: var(--ink-2);
+    font-size: 12.5px;
+  }
+  .bar .meta span { white-space: nowrap; }
+  .bar .meta span + span::before {
+    content: "·";
+    margin: 0 8px;
+    color: var(--ink-3);
+  }
+
+  /* ---- 3d stage ---------------------------------------------------- */
+  .stage {
+    position: relative;
+    min-height: 380px;
+    background: var(--stage);
+    overflow: hidden;
+  }
+  .stage canvas { display: block; width: 100%; height: 100%; }
+  .overlay {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    pointer-events: none;
+  }
+  .hint { left: 16px; bottom: 14px; }
+  .compass { right: 16px; top: 14px; flex-direction: column; gap: 4px; }
+  .compass svg { display: block; }
+  .compass .needle { transition: transform .08s linear; transform-origin: 22px 22px; }
+  @media (prefers-reduced-motion: reduce) {
+    .compass .needle { transition: none; }
+  }
+
+  /* ---- control rail ------------------------------------------------ */
+  .rail {
+    background: var(--surface);
+    border-left: 1px solid var(--rule);
+    padding: 4px 20px 28px;
+    overflow-y: auto;
+  }
+  .rail section { padding: 18px 0; border-bottom: 1px solid var(--rule-soft); }
+  .rail section:last-child { border-bottom: 0; }
+  .rail h2 {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 12px;
+  }
+
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    cursor: pointer;
+  }
+  .toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .swatch {
+    width: 14px;
+    height: 14px;
+    flex: none;
+    border-radius: 2px;
+    border: 1.5px solid currentColor;
+    background: transparent;
+  }
+  .toggle input:checked + .swatch { background: currentColor; }
+  .toggle input:focus-visible + .swatch {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .toggle .name { font-weight: 500; color: var(--ink); }
+  .toggle .n {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+  }
+  .toggle--ground { color: var(--accent); }
+  .toggle--basement { color: var(--warm); }
+
+  .slider { display: block; padding-top: 4px; }
+  .slider .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .slider .row span:first-child { color: var(--ink); font-weight: 500; }
+  .slider output {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+    margin: 0;
+  }
+  .reset {
+    margin-top: 14px;
+    font: 500 12.5px var(--body);
+    color: var(--ink-2);
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+  .reset:hover { color: var(--ink); border-color: var(--ink-3); }
+  .reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---- data tables -------------------------------------------------- */
+  table { width: 100%; border-collapse: collapse; }
+  th, td {
+    text-align: left;
+    padding: 5px 0;
+    font-size: 13px;
+    vertical-align: baseline;
+  }
+  th { font-weight: 500; color: var(--ink-2); }
+  td.num {
+    text-align: right;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  td.pct { text-align: right; font-family: var(--mono); color: var(--ink-3); width: 4.4em; }
+  tr.lot th, tr.lot td { border-bottom: 1px solid var(--rule-soft); padding-bottom: 9px; }
+  tr.lot td.num { color: var(--ink); font-weight: 500; }
+  tr.blank th, tr.blank td { color: var(--ink-3); }
+
+  .note {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .note + .note { margin-top: 10px; }
+  .note b { color: var(--ink); font-weight: 600; }
+  .flag {
+    border-left: 2px solid var(--warm);
+    background: var(--warm-soft);
+    padding: 10px 12px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+  .flag b { color: var(--ink); font-weight: 600; }
+  .mono { font-family: var(--mono); font-size: .95em; }
+
+  @media (max-width: 860px) {
+    .app { grid-template-columns: minmax(0, 1fr); }
+    .stage { height: 56vh; min-height: 300px; }
+    .rail { border-left: 0; border-top: 1px solid var(--rule); }
+    .bar .meta { margin-left: 0; flex-basis: 100%; }
+  }
+</style>
+
+<div class="app">
+  <header class="bar">
+    <h1>Bader Villa</h1>
+    <span class="code">B2660</span>
+    <div class="meta">
+      <span>Residential villa, Riyadh</span>
+      <span>Arena Architecture</span>
+      <span>Ground &amp; basement, rev 02</span>
+    </div>
+  </header>
+
+  <main class="stage">
+    <canvas id="view" aria-label="Interactive 3D model of the villa"></canvas>
+    <div class="overlay compass" aria-hidden="true">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+        <circle cx="22" cy="22" r="17" stroke="currentColor" stroke-width="1" opacity=".45"/>
+        <g class="needle" id="needle">
+          <path d="M22 6 L26 24 L22 21 L18 24 Z" fill="currentColor"/>
+        </g>
+      </svg>
+      <span>N per labels</span>
+    </div>
+    <div class="overlay hint">Drag to orbit · scroll to zoom</div>
+  </main>
+
+  <aside class="rail">
+    <section>
+      <h2>Levels</h2>
+      <label class="toggle toggle--ground">
+        <input type="checkbox" id="show-ground" checked>
+        <span class="swatch"></span>
+        <span class="name">Ground floor</span>
+        <span class="n">±0.00</span>
+      </label>
+      <label class="toggle toggle--basement">
+        <input type="checkbox" id="show-basement" checked>
+        <span class="swatch"></span>
+        <span class="name">Basement</span>
+        <span class="n">−3.60</span>
+      </label>
+      <div class="slider">
+        <div class="row">
+          <span>Separation</span>
+          <output id="sep-out" for="sep">0.0 m</output>
+        </div>
+        <input type="range" id="sep" min="0" max="10" step="0.5" value="0"
+               aria-label="Pull the two levels apart">
+      </div>
+      <button class="reset" id="reset" type="button">Reset view</button>
+    </section>
+
+    <section>
+      <h2>Area schedule</h2>
+      <table>
+        <tbody>
+          <tr class="lot">
+            <th scope="row">Total lot</th>
+            <td class="num">472.40 m²</td>
+            <td class="pct"></td>
+          </tr>
+          <tr>
+            <th scope="row">Ground floor</th>
+            <td class="num">292.10 m²</td>
+            <td class="pct">61.83%</td>
+          </tr>
+          <tr>
+            <th scope="row">Basement</th>
+            <td class="num">369.10 m²</td>
+            <td class="pct">78.13%</td>
+          </tr>
+          <tr class="blank">
+            <th scope="row">First floor</th>
+            <td class="num">not drawn</td>
+            <td class="pct"></td>
+          </tr>
+          <tr class="blank">
+            <th scope="row">Roof</th>
+            <td class="num">not drawn</td>
+            <td class="pct"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:12px">
+        Rebuilding the enclosed area from the extracted geometry returns
+        <span class="mono">472.4</span> and <span class="mono">369.1</span>,
+        matching the sheet. That is what calibrates the model.
+      </p>
+    </section>
+
+    <section>
+      <h2>Plot, from the sheet</h2>
+      <table>
+        <tbody>
+          <tr><th scope="row">Street frontage (north)</th><td class="num">24010</td></tr>
+          <tr><th scope="row">Rear (south)</th><td class="num">23210</td></tr>
+          <tr><th scope="row">East side</th><td class="num">20010</td></tr>
+          <tr><th scope="row">West side</th><td class="num">20025</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:10px">
+        Millimetres, as drawn. The street is 15 m wide.
+      </p>
+    </section>
+
+    <section>
+      <h2>How this was built</h2>
+      <p class="note">
+        The PDF kept its AutoCAD layers, so the <span class="mono">WALLS</span>
+        layer was rendered on its own, filled, and traced at a
+        <b>50 mm</b> grid. Scale comes from the 24010 mm frontage; the
+        20025 mm side then measures <span class="mono">20016</span>, a 0.04% error.
+      </p>
+      <p class="note">
+        Openings are wall gaps. Those the glazing layer touches get a sill and a
+        head; the rest get a head only.
+      </p>
+    </section>
+
+    <section>
+      <h2>Assumed, not drawn</h2>
+      <table>
+        <tbody>
+          <tr><th scope="row">Clear height</th><td class="num">3.20 m</td></tr>
+          <tr><th scope="row">Slab thickness</th><td class="num">0.40 m</td></tr>
+          <tr><th scope="row">Door and window head</th><td class="num">2.20 m</td></tr>
+          <tr><th scope="row">Window sill</th><td class="num">0.90 m</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:12px">
+        No level, height or section appears anywhere in this set, so every
+        vertical dimension above is a stated assumption.
+      </p>
+    </section>
+
+    <section>
+      <h2>Check before using</h2>
+      <div class="flag">
+        <b>North is contested.</b> The title-block compass points at the edge the
+        drawing labels <span class="mono">EAST NEIGHBOR</span>. The compass above
+        follows the written boundary labels, not the arrow. The sun here is
+        placed for legibility, not solar position.
+      </div>
+      <p class="note" style="margin-top:12px">
+        Furniture, stairs, doors and glazing are drawn on other layers and are
+        deliberately not modelled. This is the wall shell of two levels.
+      </p>
+    </section>
+  </aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var DATA = {"cell_mm":50.0,"floors":{"ground":{"grid_w":567,"grid_h":544,"wall_rects":[[32,59,464,4],[32,63,5,396],[492,63,4,19],[496,66,1,119],[37,79,20,6],[76,79,76,6],[182,79,40,6],[276,79,12,6],[342,79,114,6],[493,82,3,28],[37,85,2,374],[78,85,4,16],[126,85,4,16],[206,85,4,25],[449,85,7,21],[497,90,1,118],[494,110,2,23],[498,118,1,118],[78,119,4,70],[126,123,4,66],[495,133,1,24],[499,141,1,119],[39,156,21,5],[76,156,2,5],[60,157,1,4],[206,160,4,29],[500,165,1,118],[450,173,6,28],[449,174,1,27],[39,184,39,5],[82,184,44,5],[130,184,40,5],[192,184,14,5],[501,193,1,118],[272,194,16,7],[342,194,28,7],[437,194,12,7],[272,201,6,4],[502,216,1,119],[503,239,1,119],[39,258,42,5],[39,263,2,40],[76,263,5,7],[504,267,1,119],[216,270,4,17],[272,270,6,17],[278,280,100,7],[220,282,52,5],[372,287,6,13],[76,291,4,12],[505,291,1,119],[80,292,1,11],[41,298,35,5],[81,298,24,5],[122,298,7,5],[72,303,5,2],[124,303,5,40],[506,314,1,119],[72,322,5,21],[170,332,86,5],[170,337,4,2],[214,337,4,2],[252,337,4,42],[39,338,33,5],[77,338,47,5],[507,342,1,117],[170,356,4,27],[214,356,4,23],[372,359,6,20],[508,365,1,94],[174,372,40,7],[218,372,34,7],[256,372,25,7],[347,372,25,7],[174,379,2,4],[509,389,1,70],[510,417,1,42],[511,440,1,19],[170,448,6,11],[39,452,24,7],[123,452,47,7],[176,454,109,5],[335,454,43,5],[452,454,55,5]],"lintel_rects":[[276,63,12,16],[126,101,4,22],[170,184,22,5],[41,263,35,35],[76,270,5,21],[80,291,1,1],[506,433,1,21]],"sill_rects":[[276,63,12,16],[170,184,22,5],[41,263,35,35],[76,270,5,21],[80,291,1,1]],"slab_rects":[[32,59,464,400],[496,66,1,393],[497,90,1,369],[498,118,1,341],[499,141,1,318],[500,165,1,294],[501,193,1,266],[502,216,1,243],[503,239,1,220],[504,267,1,192],[505,291,1,168],[506,314,1,145],[507,342,1,117],[508,365,1,94],[509,389,1,70],[510,417,1,42],[511,440,1,19]]},"basement":{"grid_w":567,"grid_h":544,"wall_rects":[[43,60,464,8],[43,68,8,392],[498,68,9,2],[499,70,8,23],[507,77,1,125],[51,80,14,6],[81,80,82,6],[192,80,41,6],[286,80,13,6],[352,80,29,6],[448,80,19,6],[51,86,2,178],[85,86,4,24],[137,86,4,48],[460,86,7,21],[500,93,7,23],[508,100,1,102],[501,116,6,28],[509,123,1,79],[85,127,4,7],[53,129,32,5],[89,129,26,5],[135,129,2,5],[109,134,4,30],[502,144,5,23],[510,151,1,51],[503,167,4,23],[460,174,7,28],[511,174,1,28],[109,175,4,7],[53,177,56,5],[504,190,3,12],[282,195,178,7],[467,197,37,5],[282,202,7,86],[53,259,38,5],[87,264,4,7],[289,281,100,7],[282,288,5,4],[382,288,7,172],[87,292,4,12],[51,299,36,5],[51,304,2,156],[282,313,5,67],[180,333,102,5],[180,338,5,2],[226,338,5,2],[226,357,5,23],[180,359,5,25],[185,373,41,7],[231,373,51,7],[287,373,5,7],[357,373,25,7],[185,380,2,4],[381,443,1,1],[180,449,7,11],[53,453,127,7],[187,453,195,7]],"lintel_rects":[[286,68,13,12],[352,68,29,12],[448,68,19,12],[467,80,32,27],[499,93,1,14],[115,129,20,5],[109,164,4,11],[502,167,1,30],[467,174,35,23],[503,190,1,7],[51,264,36,35],[87,271,4,21],[282,292,5,21],[381,444,1,9],[369,452,12,1]],"sill_rects":[[286,68,13,12],[352,68,29,12],[448,68,19,12],[467,80,32,27],[499,93,1,14],[115,129,20,5],[109,164,4,11],[502,167,1,30],[467,174,35,23],[503,190,1,7],[51,264,36,35],[87,271,4,21],[282,292,5,21]],"slab_rects":[[43,60,464,142],[507,77,1,125],[508,100,1,102],[509,123,1,79],[510,151,1,51],[511,174,1,28],[43,202,246,258],[289,281,100,179]]}}};
+  var CELL = DATA.cell_mm / 1000;
+  var CLEAR = 3.20, SLAB = 0.40, HEAD = 2.20, SILL = 0.90;
+  var LEVEL = { ground: 0.0, basement: -(CLEAR + SLAB) };
+
+  var canvas = document.getElementById('view');
+  var stage = canvas.parentNode;
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(38, 1, 0.5, 500);
+
+  // --- materials ----------------------------------------------------
+  function mat(hex, rough) {
+    return new THREE.MeshStandardMaterial({ color: hex, roughness: rough || 0.88, metalness: 0 });
+  }
+  var M = {
+    wall: mat(0xe8e4dc),
+    trim: mat(0xd2ccc0),
+    slabGround: mat(0x7d8c98, 0.94),
+    slabBasement: mat(0x8c7f66, 0.94),
+    site: mat(0xa9a396, 1.0)
+  };
+
+  // --- build the two levels ----------------------------------------
+  var g = DATA.floors.ground;
+  var sx = [], sy = [];
+  g.slab_rects.forEach(function (r) {
+    sx.push(r[0], r[0] + r[2]);
+    sy.push(r[1], r[1] + r[3]);
+  });
+  var gw = g.grid_w;
+  var ox = ((gw - Math.min.apply(null, sx)) + (gw - Math.max.apply(null, sx))) / 2 * CELL;
+  var oy = (Math.min.apply(null, sy) + Math.max.apply(null, sy)) / 2 * CELL;
+
+  var groups = {};
+  Object.keys(LEVEL).forEach(function (name) {
+    var f = DATA.floors[name], z = LEVEL[name];
+    var group = new THREE.Group();
+    var slabMat = name === 'ground' ? M.slabGround : M.slabBasement;
+    var parts = [
+      [f.slab_rects, z - SLAB, z, slabMat],
+      [f.wall_rects, z, z + CLEAR, M.wall],
+      [f.lintel_rects, z + HEAD, z + CLEAR, M.trim],
+      [f.sill_rects, z, z + SILL, M.trim]
+    ];
+    parts.forEach(function (part) {
+      var rects = part[0], z0 = part[1], z1 = part[2], material = part[3];
+      if (!rects || !rects.length) return;
+      rects.forEach(function (r) {
+        // image +x runs west and image +y runs north, so east is mirrored
+        var x1 = (f.grid_w - r[0]) * CELL - ox;
+        var x0 = (f.grid_w - r[0] - r[2]) * CELL - ox;
+        var n0 = r[1] * CELL - oy;
+        var n1 = (r[1] + r[3]) * CELL - oy;
+        var box = new THREE.Mesh(
+          new THREE.BoxGeometry(x1 - x0, z1 - z0, n1 - n0), material);
+        box.position.set((x0 + x1) / 2, (z0 + z1) / 2, -(n0 + n1) / 2);
+        box.castShadow = true;
+        box.receiveShadow = true;
+        group.add(box);
+      });
+    });
+    groups[name] = group;
+    scene.add(group);
+  });
+
+  var site = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), M.site);
+  site.rotation.x = -Math.PI / 2;
+  site.position.y = -SLAB - 0.02;
+  site.receiveShadow = true;
+  scene.add(site);
+
+  // --- light --------------------------------------------------------
+  var sun = new THREE.DirectionalLight(0xfff4e2, 2.5);
+  sun.position.set(-14, 26, -20);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  var sc = sun.shadow.camera;
+  sc.left = -28; sc.right = 28; sc.top = 28; sc.bottom = -28;
+  sc.near = 1; sc.far = 90;
+  scene.add(sun);
+  scene.add(new THREE.HemisphereLight(0xdfeaf2, 0x6e6558, 1.15));
+
+  // --- theme --------------------------------------------------------
+  function syncTheme() {
+    var css = getComputedStyle(document.documentElement).getPropertyValue('--stage').trim();
+    var c = new THREE.Color(css || '#ced6db');
+    scene.background = c;
+    M.site.color.copy(c).multiplyScalar(0.88);
+  }
+  syncTheme();
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', syncTheme);
+  }
+  new MutationObserver(syncTheme).observe(document.documentElement,
+    { attributes: true, attributeFilter: ['data-theme'] });
+
+  // --- orbit --------------------------------------------------------
+  var HOME = { yaw: -0.62, pitch: 0.72, dist: 52 };
+  var view = { yaw: HOME.yaw, pitch: HOME.pitch, dist: HOME.dist };
+  var target = new THREE.Vector3(0, -1.4, 0);
+
+  function place() {
+    var cp = Math.cos(view.pitch);
+    camera.position.set(
+      target.x + view.dist * cp * Math.sin(view.yaw),
+      target.y + view.dist * Math.sin(view.pitch),
+      target.z + view.dist * cp * Math.cos(view.yaw));
+    camera.lookAt(target);
+  }
+
+  var drag = null;
+  canvas.style.touchAction = 'none';
+  canvas.addEventListener('pointerdown', function (e) {
+    drag = { x: e.clientX, y: e.clientY };
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    view.yaw -= (e.clientX - drag.x) * 0.006;
+    view.pitch = Math.max(0.08, Math.min(1.45, view.pitch + (e.clientY - drag.y) * 0.005));
+    drag.x = e.clientX; drag.y = e.clientY;
+    place();
+  });
+  function stop(e) {
+    if (drag && canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+    drag = null;
+  }
+  canvas.addEventListener('pointerup', stop);
+  canvas.addEventListener('pointercancel', stop);
+  canvas.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    view.dist = Math.max(14, Math.min(120, view.dist * (1 + Math.sign(e.deltaY) * 0.09)));
+    place();
+  }, { passive: false });
+
+  // --- controls -----------------------------------------------------
+  var sep = document.getElementById('sep');
+  var sepOut = document.getElementById('sep-out');
+  function applySeparation() {
+    var d = parseFloat(sep.value);
+    sepOut.textContent = d.toFixed(1) + ' m';
+    groups.basement.position.y = -d;
+    site.visible = d < 0.25 && document.getElementById('show-ground').checked;
+  }
+  sep.addEventListener('input', applySeparation);
+
+  ['ground', 'basement'].forEach(function (name) {
+    var box = document.getElementById('show-' + name);
+    box.addEventListener('change', function () {
+      groups[name].visible = box.checked;
+      applySeparation();
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', function () {
+    view.yaw = HOME.yaw; view.pitch = HOME.pitch; view.dist = HOME.dist;
+    sep.value = 0;
+    document.getElementById('show-ground').checked = true;
+    document.getElementById('show-basement').checked = true;
+    groups.ground.visible = true;
+    groups.basement.visible = true;
+    applySeparation();
+    place();
+  });
+
+  // --- compass needle ----------------------------------------------
+  var needle = document.getElementById('needle');
+  var pNorth = new THREE.Vector3(), pOrigin = new THREE.Vector3();
+  function updateNeedle() {
+    pOrigin.set(0, 0, 0).project(camera);
+    pNorth.set(0, 0, -8).project(camera);
+    var dx = pNorth.x - pOrigin.x;
+    var dy = -(pNorth.y - pOrigin.y);
+    needle.setAttribute('transform',
+      'rotate(' + (Math.atan2(dx, -dy) * 180 / Math.PI).toFixed(1) + ' 22 22)');
+  }
+
+  // --- loop ---------------------------------------------------------
+  function resize() {
+    var w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+
+  function tick() {
+    resize();
+    updateNeedle();
+    renderer.render(scene, camera);
+    requestAnimationFrame(tick);
+  }
+  applySeparation();
+  place();
+  tick();
+})();
+</script>
