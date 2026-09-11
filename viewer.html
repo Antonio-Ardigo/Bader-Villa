@@ -65,7 +65,7 @@
     -webkit-font-smoothing: antialiased;
   }
   .app {
-    min-height: 100vh;
+    height: 100vh;
     display: grid;
     grid-template-columns: minmax(0, 1fr) 340px;
     grid-template-rows: auto minmax(0, 1fr);
@@ -144,6 +144,7 @@
     background: var(--surface);
     border-left: 1px solid var(--rule);
     padding: 4px 20px 28px;
+    min-height: 0;
     overflow-y: auto;
   }
   .rail section { padding: 18px 0; border-bottom: 1px solid var(--rule-soft); }
@@ -263,9 +264,9 @@
   .mono { font-family: var(--mono); font-size: .95em; }
 
   @media (max-width: 860px) {
-    .app { grid-template-columns: minmax(0, 1fr); }
+    .app { height: auto; min-height: 100vh; grid-template-columns: minmax(0, 1fr); }
     .stage { height: 56vh; min-height: 300px; }
-    .rail { border-left: 0; border-top: 1px solid var(--rule); }
+    .rail { border-left: 0; border-top: 1px solid var(--rule); overflow-y: visible; }
     .bar .meta { margin-left: 0; flex-basis: 100%; }
   }
 </style>
@@ -501,7 +502,7 @@
   scene.add(site);
 
   // --- light --------------------------------------------------------
-  var sun = new THREE.DirectionalLight(0xfff4e2, 2.5);
+  var sun = new THREE.DirectionalLight(0xfff2dd, 1.55);
   sun.position.set(-14, 26, -20);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -509,7 +510,7 @@
   sc.left = -28; sc.right = 28; sc.top = 28; sc.bottom = -28;
   sc.near = 1; sc.far = 90;
   scene.add(sun);
-  scene.add(new THREE.HemisphereLight(0xdfeaf2, 0x6e6558, 1.15));
+  scene.add(new THREE.HemisphereLight(0xdfeaf2, 0x6e6558, 0.72));
 
   // --- theme --------------------------------------------------------
   function syncTheme() {
