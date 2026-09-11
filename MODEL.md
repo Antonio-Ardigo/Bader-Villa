@@ -11,7 +11,8 @@ set itself rather than by tracing an image.
 | `build/bader_villa.glb` | glTF export, opens in any 3D viewer |
 | `build/plan_geometry.json` | The extracted geometry, as 50 mm grid rectangles per level |
 | `build/views/*.png` | Cycles renders: each level, an exploded pair, and a view from the street |
-| `viewer.html` | Self-contained interactive viewer, no build step |
+| `viewer.html` | Interactive viewer, loads three.js from a CDN |
+| `viewer-standalone.html` | The same viewer with three.js bundled in, so it runs offline from a double-click |
 
 ## Rebuilding
 
